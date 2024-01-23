@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
+
 @Service
 public class OrderServiceIMPL implements OrderService {
     @Autowired
@@ -18,14 +20,16 @@ public class OrderServiceIMPL implements OrderService {
     }
 
     @Override
-    public Orders add(Address address, Double totalPrice) {
+    public Orders add(Users users, Double totalPrice) {
         Orders order = Orders.builder()
-                .users(address.getUsers())
+                .orderNumber(UUID.randomUUID().toString())
+                .users(users)
                 .price(totalPrice)
                 .status(EOrderStatus.WAITING)
-                .receiveName(address.getReceiveName())
-                .receiveAddress(address.getAddress())
-                .receivePhone(address.getPhone())
+                .receiveName(users.getFullName())
+                .receiveAddress(users.getAddress())
+                .receivePhone(users.getPhone())
+                .created(new java.sql.Date(new java.util.Date().getTime()))
                 .build();
         return orderRepository.save(order);
     }

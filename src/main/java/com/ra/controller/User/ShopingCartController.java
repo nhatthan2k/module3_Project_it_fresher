@@ -21,7 +21,7 @@ public class ShopingCartController {
     private ShopingCartService shopingCartService;
 
     @Autowired
-    private AddressService addressService;
+    private UserService userService;
 
     @Autowired
     private OrderService orderService;
@@ -92,19 +92,17 @@ public class ShopingCartController {
         Long userId = getUserId();
         List<ShopingCart> shopingCarts = shopingCartService.getAll(userId);
 
-        List<Address> listAddress = addressService.getAll(userId);
-
-        Address address = listAddress.get(0);
-
         if (shopingCarts.isEmpty()) {
             return new ResponseEntity<>("giỏ hàng trống", HttpStatus.BAD_REQUEST);
         }
+
+        Users user = userService.findById(userId);
 
         double totalPrice = shopingCarts.stream()
                 .mapToDouble(shopingCart -> shopingCart.getProduct().getPrice())
                 .sum();
 
-        Orders order = orderService.add(address, totalPrice);
+        Orders order = orderService.add(user, totalPrice);
 
         for (ShopingCart shopingCart: shopingCarts) {
             int orderQuantity = shopingCart.getQuantity();
@@ -112,6 +110,6 @@ public class ShopingCartController {
             orderDetailService.add(product, order, orderQuantity);
         }
 
-        return new ResponseEntity<>("ặt hàng thành công!", HttpStatus.OK);
+        return new ResponseEntity<>("Đặt hàng thành công!", HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.ra.service.impl;
 
+import com.ra.model.dto.request.WishListRequest;
 import com.ra.model.entity.Product;
 import com.ra.model.entity.Users;
 import com.ra.model.entity.WishList;
@@ -22,10 +23,10 @@ public class WishListServiceIMPL implements WishListService {
     private WishListRepository wishListRepository;
 
     @Override
-    public WishList add(Long userId, Long productId) {
+    public WishList add(Long userId, WishListRequest wishListRequest) {
         Users user = userService.findById(userId);
 
-        Product product = productService.findById(productId);
+        Product product = productService.findById(wishListRequest.getProductId());
 
         if (product == null) {
             throw new RuntimeException("không tồn tại sản phẩm");

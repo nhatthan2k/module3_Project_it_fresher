@@ -1,5 +1,6 @@
 package com.ra.controller.User;
 
+import com.ra.model.dto.request.WishListRequest;
 import com.ra.model.entity.WishList;
 import com.ra.service.WishListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,9 @@ public class WishListController {
     private WishListService wishListService;
 
     @PostMapping("")
-    public ResponseEntity<WishList> add(@RequestBody Long productId) {
+    public ResponseEntity<WishList> add(@RequestBody WishListRequest wishListRequest) {
         Long userId = getUserId();
-        WishList wishList = wishListService.add(userId, productId);
+        WishList wishList = wishListService.add(userId, wishListRequest);
         return new ResponseEntity<>(wishList, HttpStatus.CREATED);
     }
     @GetMapping("")
